@@ -339,3 +339,9 @@ For support and questions:
 ---
 
 **Built with ❤️ using FastAPI, React, and modern web technologies.**
+
+
+Contact Details-
+Name: Razibul Hoque
+Email: razibulhoque1999@gmail.com
+Ph No: 9085383383
