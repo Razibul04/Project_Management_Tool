@@ -1,83 +1,17 @@
-# Project Management Tool
+# Backend API - Project Management Tool
 
-A comprehensive web-based project management tool built with FastAPI, React, PostgreSQL, and AI integration.
+FastAPI-based backend for the Project Management Tool with PostgreSQL, JWT authentication, and AI integration.
 
-## 🚀 Features
+## 🚀 Quick Start
 
-### Core Features
-- **User Management**: Role-based access control (Admin, Project Manager, Developer)
-- **Project Management**: Create, update, and track projects with team members
-- **Task Management**: Kanban-style task board with status tracking
-- **Comments System**: Add comments to tasks for collaboration
-- **Dashboard**: Real-time metrics and project progress visualization
-- **JWT Authentication**: Secure login and role-based permissions
-
-### AI Features (Bonus)
-- **User Story Generator**: AI-powered generation of user stories from project descriptions
-- **Task Generation**: Automatically create tasks from user stories
-- **GROQ Integration**: Fast AI responses using GROQ API
-
-## 🏗️ Architecture
-
-### Backend (FastAPI)
-- **Framework**: FastAPI with Python 3.11+
-- **Database**: PostgreSQL with SQLAlchemy ORM
-- **Authentication**: JWT with role-based access control
-- **API Documentation**: Auto-generated Swagger/OpenAPI docs
-- **Testing**: Comprehensive unit tests with pytest
-
-### Frontend (React)
-- **Framework**: React 18 with Material-UI
-- **State Management**: Context API for authentication
-- **Routing**: React Router for navigation
-- **Charts**: Recharts for data visualization
-- **Responsive Design**: Mobile-friendly interface
-
-### Database Schema
-- **Users**: User accounts with roles and authentication
-- **Projects**: Project information and status tracking
-- **Tasks**: Task management with assignments and deadlines
-- **Comments**: Task comments for collaboration
-- **Project Members**: Many-to-many relationship for team management
-
-## 📋 Prerequisites
-
+### Prerequisites
 - Python 3.11+
-- Node.js 18+
 - PostgreSQL 15+
-- Docker & Docker Compose (optional)
+- pip
 
-## 🛠️ Installation & Setup
+### Installation
 
-### Option 1: Docker Compose (Recommended)
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd project-management-tool
-   ```
-
-2. **Set up environment variables**
-   ```bash
-   cp backend/env.example backend/.env
-   # Edit backend/.env with your configuration
-   ```
-
-3. **Start the application**
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-
-### Option 2: Manual Setup
-
-#### Backend Setup
-
-1. **Navigate to backend directory**
+1. **Clone and navigate to backend**
    ```bash
    cd backend
    ```
@@ -96,252 +30,245 @@ A comprehensive web-based project management tool built with FastAPI, React, Pos
 4. **Set up environment variables**
    ```bash
    cp env.example .env
-   # Edit .env with your database and API keys
+   # Edit .env with your configuration
    ```
 
-5. **Set up PostgreSQL database**
+5. **Set up database**
    ```bash
    createdb project_management
    ```
 
-6. **Run the backend**
+6. **Run the server**
    ```bash
    uvicorn app.main:app --reload
    ```
 
-#### Frontend Setup
+The API will be available at http://localhost:8000
 
-1. **Navigate to frontend directory**
-   ```bash
-   cd frontend
-   ```
+## 📚 API Documentation
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
 
-3. **Start the development server**
-   ```bash
-   npm start
-   ```
+## 🧪 Testing
+
+```bash
+pytest
+```
+
+## 🏗️ Project Structure
+
+```
+backend/
+├── app/
+│   ├── main.py              # FastAPI application
+│   ├── config.py            # Configuration settings
+│   ├── database.py          # Database connection
+│   ├── models/              # SQLAlchemy models
+│   │   ├── user.py
+│   │   ├── project.py
+│   │   └── task.py
+│   ├── routes/              # API routes
+│   │   ├── auth.py
+│   │   ├── users.py
+│   │   ├── projects.py
+│   │   ├── tasks.py
+│   │   └── ai.py
+│   ├── schemas/             # Pydantic schemas
+│   │   ├── user_schema.py
+│   │   ├── project_schema.py
+│   │   └── task_schema.py
+│   ├── services/            # Business logic
+│   │   ├── auth_service.py
+│   │   └── ai_service.py
+│   └── utils/               # Utilities
+│       ├── security.py
+│       └── exceptions.py
+├── tests/                   # Test files
+├── requirements.txt         # Python dependencies
+└── README.md
+```
 
 ## 🔧 Configuration
 
 ### Environment Variables
 
-Create a `.env` file in the backend directory:
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:password@localhost:5432/project_management` |
+| `SECRET_KEY` | JWT secret key | `your-secret-key-change-in-production` |
+| `ALGORITHM` | JWT algorithm | `HS256` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiration time | `30` |
+| `ALLOWED_ORIGINS` | CORS allowed origins | `["http://localhost:3000"]` |
+| `OPENAI_API_KEY` | OpenAI API key (optional) | - |
+| `GROQ_API_KEY` | GROQ API key (optional) | - |
 
-```env
-# Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/project_management
+## 🔐 Authentication
 
-# JWT
-SECRET_KEY=your-secret-key-change-in-production
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+The API uses JWT-based authentication with role-based access control.
 
-# CORS
-ALLOWED_ORIGINS=["http://localhost:3000", "http://127.0.0.1:3000"]
+### User Roles
+- **Admin**: Full system access
+- **Project Manager**: Can manage projects and tasks
+- **Developer**: Can update assigned tasks
 
-# AI Services (Optional)
-OPENAI_API_KEY=your-openai-api-key
-GROQ_API_KEY=your-groq-api-key
-```
+### Authentication Flow
+1. Register/Login to get JWT token
+2. Include token in Authorization header: `Bearer <token>`
+3. Token expires after configured time
 
-### AI Integration Setup
+## 🗄️ Database Models
 
-1. **Get API Keys**
-   - [GROQ API Key](https://console.groq.com/keys)
-   - [OpenAI API Key](https://platform.openai.com/api-keys) (optional)
+### Users
+- User accounts with roles and authentication
+- Password hashing with bcrypt
 
-2. **Add to environment variables**
-   ```env
-   GROQ_API_KEY=your-groq-api-key
-   OPENAI_API_KEY=your-openai-api-key
-   ```
+### Projects
+- Project information and status tracking
+- Owner relationship with users
+- Member management
+
+### Tasks
+- Task management with assignments
+- Status workflow (todo → in_progress → done)
+- Priority levels and deadlines
+
+### Comments
+- Task comments for collaboration
+- User attribution and timestamps
+
+## 🤖 AI Integration
+
+### User Story Generation
+- Generate user stories from project descriptions
+- Uses GROQ API for fast responses
+- Configurable number of stories
+
+### Task Generation
+- Create tasks from user stories
+- Automatic priority assignment
+- Time estimation
 
 ## 🧪 Testing
 
-### Backend Tests
+### Running Tests
 ```bash
-cd backend
+# Run all tests
 pytest
+
+# Run with coverage
+pytest --cov=app
+
+# Run specific test file
+pytest tests/test_auth.py
 ```
 
-### Frontend Tests
-```bash
-cd frontend
-npm test
-```
-
-## 📚 API Documentation
-
-### Interactive Documentation
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-
-### Postman Collection
-Import the collection from `docs/Postman-collection.json` for easy API testing.
-
-### Key Endpoints
-
-#### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login and get token
-- `GET /api/auth/me` - Get current user info
-
-#### Projects
-- `GET /api/projects/` - List projects
-- `POST /api/projects/` - Create project
-- `GET /api/projects/{id}` - Get project details
-- `PUT /api/projects/{id}` - Update project
-- `DELETE /api/projects/{id}` - Delete project
-
-#### Tasks
-- `GET /api/tasks/` - List tasks
-- `POST /api/tasks/` - Create task
-- `GET /api/tasks/{id}` - Get task details
-- `PUT /api/tasks/{id}` - Update task
-- `DELETE /api/tasks/{id}` - Delete task
-
-#### AI Features
-- `POST /api/ai/generate-user-stories` - Generate user stories
-- `POST /api/ai/generate-tasks` - Generate tasks from stories
-
-## 👥 User Roles
-
-### Admin
-- Full system access
-- Manage all users, projects, and tasks
-- Access to AI features
-
-### Project Manager
-- Create and manage projects
-- Assign tasks to team members
-- Access to AI features
-- View all project data
-
-### Developer
-- View assigned tasks
-- Update task status and add comments
-- Limited project access
-
-## 🎯 Usage Guide
-
-### Getting Started
-
-1. **Register an account** or use the default admin account:
-   - Email: `admin@example.com`
-   - Password: `password123`
-
-2. **Create a project**
-   - Navigate to Projects page
-   - Click "New Project"
-   - Fill in project details
-
-3. **Add team members**
-   - Go to project details
-   - Add members with appropriate roles
-
-4. **Create tasks**
-   - Navigate to Tasks page
-   - Create tasks and assign to team members
-
-5. **Track progress**
-   - Use the Dashboard for overview
-   - Update task status as work progresses
-
-### AI Features
-
-1. **Generate User Stories**
-   - Go to a project
-   - Use AI to generate user stories from project description
-
-2. **Create Tasks from Stories**
-   - Select generated user stories
-   - Use AI to create specific development tasks
+### Test Structure
+- **conftest.py**: Test fixtures and configuration
+- **test_auth.py**: Authentication tests
+- **test_projects.py**: Project management tests
+- **test_tasks.py**: Task management tests
+- **test_ai.py**: AI feature tests
 
 ## 🚀 Deployment
 
-### Production Deployment
+### Docker
+```bash
+docker build -t project-management-backend .
+docker run -p 8000:8000 project-management-backend
+```
 
-1. **Update environment variables**
-   ```env
-   SECRET_KEY=your-production-secret-key
-   DATABASE_URL=your-production-database-url
-   ALLOWED_ORIGINS=["https://yourdomain.com"]
-   ```
+### Production Considerations
+- Use environment-specific configuration
+- Set strong SECRET_KEY
+- Configure proper CORS origins
+- Use production database
+- Enable SSL/HTTPS
+- Set up monitoring and logging
 
-2. **Build and deploy**
-   ```bash
-   docker-compose -f docker-compose.prod.yml up -d
-   ```
+## 📊 API Endpoints
 
-### Environment-specific Configurations
+### Authentication
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login
+- `GET /api/auth/me` - Get current user
 
-- **Development**: Hot reload enabled, debug mode
-- **Production**: Optimized builds, security headers, SSL
+### Users
+- `GET /api/users/` - List users (Admin)
+- `GET /api/users/{id}` - Get user
+- `PUT /api/users/{id}` - Update user
+- `DELETE /api/users/{id}` - Delete user (Admin)
 
-## 🔒 Security Features
+### Projects
+- `GET /api/projects/` - List projects
+- `POST /api/projects/` - Create project
+- `GET /api/projects/{id}` - Get project
+- `PUT /api/projects/{id}` - Update project
+- `DELETE /api/projects/{id}` - Delete project
+- `POST /api/projects/{id}/members` - Add member
+- `GET /api/projects/{id}/members` - Get members
 
-- JWT-based authentication
-- Role-based access control
+### Tasks
+- `GET /api/tasks/` - List tasks
+- `POST /api/tasks/` - Create task
+- `GET /api/tasks/{id}` - Get task
+- `PUT /api/tasks/{id}` - Update task
+- `DELETE /api/tasks/{id}` - Delete task
+- `POST /api/tasks/{id}/comments` - Add comment
+- `GET /api/tasks/{id}/comments` - Get comments
+- `GET /api/tasks/dashboard/stats` - Dashboard stats
+
+### AI Features
+- `POST /api/ai/generate-user-stories` - Generate stories
+- `POST /api/ai/generate-tasks` - Generate tasks
+
+## 🔍 Error Handling
+
+The API returns appropriate HTTP status codes and error messages:
+
+- `200`: Success
+- `201`: Created
+- `400`: Bad Request
+- `401`: Unauthorized
+- `403`: Forbidden
+- `404`: Not Found
+- `422`: Validation Error
+- `500`: Internal Server Error
+
+## 📈 Performance
+
+- Database connection pooling
+- Efficient queries with SQLAlchemy
+- JWT token caching
+- Pagination for large datasets
+- Optimized AI API calls
+
+## 🛡️ Security
+
+- JWT authentication
 - Password hashing with bcrypt
+- Role-based access control
+- Input validation with Pydantic
+- SQL injection prevention
 - CORS protection
-- Input validation and sanitization
-- SQL injection prevention with SQLAlchemy
+- Environment variable security
 
-## 📊 Monitoring & Logging
+## 🔧 Development
 
-- Health check endpoints
-- Structured logging
-- Error tracking
-- Performance monitoring
+### Code Style
+- Follow PEP 8
+- Use type hints
+- Document functions and classes
+- Write comprehensive tests
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new features
-5. Submit a pull request
+### Adding New Features
+1. Create model in `models/`
+2. Add schema in `schemas/`
+3. Implement service logic in `services/`
+4. Create routes in `routes/`
+5. Add tests in `tests/`
+6. Update documentation
 
 ## 📝 License
 
-This project is licensed under the MIT License.
-
-## 🆘 Support
-
-For support and questions:
-- Check the API documentation at `/docs`
-- Review the test cases for usage examples
-- Open an issue for bugs or feature requests
-
-## 🔮 Future Enhancements
-
-- Real-time notifications
-- File attachments for tasks
-- Time tracking
-- Advanced reporting and analytics
-- Mobile app
-- Integration with external tools (Slack, GitHub, etc.)
-- Advanced AI features (automated task prioritization, project risk assessment)
-
-## 📈 Performance Considerations
-
-- Database indexing for large datasets
-- Caching for frequently accessed data
-- Pagination for large lists
-- Optimized queries with SQLAlchemy
-- Frontend code splitting and lazy loading
-
----
-
-**Built with ❤️ using FastAPI, React, and modern web technologies.**
-
-
-Contact Details-
-Name: Razibul Hoque
-Email: razibulhoque1999@gmail.com
-Ph No: 9085383383
+MIT License - see main README for details.
